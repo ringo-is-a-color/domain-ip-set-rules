@@ -1,0 +1,35 @@
+name: Build and publish Rules' files
+
+on:
+  schedule:
+    - cron: 0 0 * * 0
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-java@v3
+      with:
+        distribution: temurin
+        java-version: 17
+        cache: sbt
+    - run: sbt "run false"
+    - run: |
+        cd data || exit 1
+        find . -type f -exec bash -c "sha256sum '{}' > '{}'.sha256sum" \;
+    - uses: crazy-max/ghaction-github-pages@v3
+      with:
+        target_branch: release
+        build_dir: data
+        commit_message: Generate rules' files
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - run: |
+        cd data || exit 1
+        for file in $(ls); do
+          curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@release/${file}"
+        done
