@@ -20,7 +20,7 @@ jobs:
     - run: sbt "run false"
     - run: |
         cd data || exit 1
-        find . -type f -exec bash -c "sha256sum '{}' > '{}'.sha256sum" \;
+        find * -type f -exec bash -c "sha256sum '{}' > '{}'.sha256sum" \;
     - uses: crazy-max/ghaction-github-pages@v3
       with:
         target_branch: release
