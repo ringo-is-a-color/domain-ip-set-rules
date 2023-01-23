@@ -9,7 +9,8 @@ lazy val root = project
     libraryDependencies ++= Seq(
       "com.comcast" %% "ip4s-core" % "3.2.0",
       "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion % "protobuf",
-      "org.xerial" % "sqlite-jdbc" % "3.40.0.0"
+      "org.xerial" % "sqlite-jdbc" % "3.40.0.0",
+      "com.lihaoyi" %% "upickle" % "3.0.0-M1"
     ),
     Compile / PB.targets := Seq(
       scalapb.gen() -> (Compile / sourceManaged).value / "scalapb"
